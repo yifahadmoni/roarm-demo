@@ -2,89 +2,64 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RoArm-M1 - Stage 1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stage 1 Process</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
   <style>
     body {
+      font-family: 'Fira Code', monospace;
       background-color: #0f172a;
       color: #ffffff;
-      font-family: 'Fira Code', monospace;
     }
     .terminal {
       background-color: #1e293b;
       border-radius: 0.5rem;
       border: 1px solid #4b5563;
       padding: 1rem;
-      font-size: 0.875rem;
     }
     .log-entry {
+      font-family: 'Fira Code', monospace;
       padding: 0.25rem 0.5rem;
       border-radius: 0.25rem;
+      background-color: #0f172a;
       margin-bottom: 0.25rem;
     }
     .info-log { color: #60a5fa; }
     .fail-log { color: #f87171; }
-    .step-box {
-      border: 2px solid #9333ea;
-      background-color: rgba(147, 51, 234, 0.1);
-      border-radius: 1rem;
-      padding: 1.5rem;
-      margin: 1rem 0;
-    }
-    .step-number {
-      background-color: #9333ea;
-      color: white;
-      width: 2rem;
-      height: 2rem;
-      border-radius: 9999px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      margin-right: 1rem;
-    }
-    .highlight {
-      color: #ec4899;
-      font-weight: bold;
+    .success-log { color: #4ade80; }
+    .title {
+      color: #f472b6;
     }
   </style>
 </head>
-<body class="p-4 md:p-8">
-  <div class="max-w-3xl mx-auto">
-    <h1 class="text-3xl font-bold text-center text-fuchsia-400 mb-6">🦾 RoArm-M1 Stage 1: Start System</h1>
-    
-    <div class="step-box">
-      <div class="flex items-center mb-4">
-        <div class="step-number">1</div>
-        <h2 class="text-xl font-semibold">Start System</h2>
-      </div>
+<body class="p-6">
+  <div class="max-w-4xl mx-auto">
+    <header class="mb-8 text-center">
+      <h1 class="text-3xl font-bold title">🦾 RoArm-M1 – Simple Stage 1 Flow</h1>
+      <p class="text-lg text-fuchsia-300">A minimal version of the full process</p>
+    </header>
 
-      <ul class="list-disc list-inside ml-6 mb-4 text-slate-200 leading-relaxed">
-        <li>Initialize <span class="highlight">camera</span>, <span class="highlight">sensor</span>, and <span class="highlight">robotic arm</span></li>
-        <li>Load models: <span class="highlight">YOLOv8</span> and <span class="highlight">MiDaS</span></li>
-      </ul>
-
+    <div class="step-box mb-6">
+      <h2 class="text-xl font-semibold mb-2 text-fuchsia-400">Step 1: System Init</h2>
       <div class="terminal">
-        <p class="mb-2 text-fuchsia-300 font-medium">📝 Logs:</p>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Success Logs -->
-          <div>
-            <p class="text-green-400 text-sm mb-1">✅ Success:</p>
-            <div class="log-entry info-log">[INFO] System initialized</div>
-            <div class="log-entry info-log">[INFO] Models loaded successfully</div>
-          </div>
-
-          <!-- Failure Logs -->
-          <div>
-            <p class="text-red-400 text-sm mb-1">❌ Failure:</p>
-            <div class="log-entry fail-log">[ERROR] Failed to initialize system</div>
-            <div class="log-entry fail-log">[FAIL] Model loading error: CUDA out of memory</div>
-          </div>
-        </div>
+        <div class="log-entry info-log">[INFO] Camera initialized</div>
+        <div class="log-entry info-log">[INFO] YOLO model loaded</div>
+        <div class="log-entry fail-log">[FAIL] Distance sensor not responding</div>
       </div>
     </div>
+
+    <div class="step-box mb-6">
+      <h2 class="text-xl font-semibold mb-2 text-fuchsia-400">Step 2: Object Selection</h2>
+      <div class="terminal">
+        <div class="log-entry info-log">[INFO] Objects available: Cup, Bottle, Scissors</div>
+        <div class="log-entry success-log">[USER] Selected: Bottle</div>
+      </div>
+    </div>
+
+    <footer class="mt-12 text-center text-sm text-gray-400">
+      <p>v1.0 – Stage 1.2 styled view</p>
+    </footer>
   </div>
 </body>
 </html>
