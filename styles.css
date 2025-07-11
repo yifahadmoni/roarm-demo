@@ -1,32 +1,37 @@
-<!-- Step 1 -->
-<div class="step-box p-6 transition hover:scale-[1.01]">
-  <div class="flex items-center mb-4">
-    <div class="step-number mr-4">1</div>
-    <h2 class="text-2xl font-semibold text-fuchsia-300">Start System</h2>
-  </div>
-
-  <ul class="list-disc list-inside ml-6 mb-4 text-slate-200 text-base leading-relaxed">
-    <li>Initialize <span class="highlight">camera</span>, <span class="highlight">sensor</span>, and <span class="highlight">robotic arm</span></li>
-    <li>Load models: <span class="math">YOLOv8</span> and <span class="math">MiDaS</span></li>
-  </ul>
-
-  <div class="terminal p-4 text-sm space-y-2">
-    <p class="text-slate-400 mb-2">📝 <span class="font-medium text-fuchsia-400">Logs</span>:</p>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <!-- Success Logs -->
-      <div>
-        <p class="text-xs text-green-400 mb-1">✅ Success:</p>
-        <div class="log-entry info-log">[INFO] System initialized</div>
-        <div class="log-entry info-log">[INFO] Models loaded successfully</div>
-      </div>
-
-      <!-- Failure Logs -->
-      <div>
-        <p class="text-xs text-red-400 mb-1">❌ Failure:</p>
-        <div class="log-entry fail-log">[ERROR] Failed to initialize system</div>
-        <div class="log-entry fail-log">[FAIL] Model loading error: CUDA out of memory</div>
-      </div>
-    </div>
-  </div>
-</div>
+body {
+  font-family: sans-serif;
+  direction: rtl;
+  text-align: center;
+  padding: 20px;
+}
+.section {
+  margin: 20px 0;
+}
+button {
+  padding: 10px 20px;
+  margin: 5px;
+  font-size: 1.2em;
+}
+.step {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #f9f9f9;
+}
+.active {
+  background: #d0f0d0;
+}
+#progress {
+  width: 100%;
+  background: #eee;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 20px 0;
+}
+#bar {
+  height: 20px;
+  background: #4caf50;
+  width: 0%;
+  transition: width 0.5s ease;
+}
