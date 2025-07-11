@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RoArm-M1 Interactive Pipeline</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Fira Code', monospace;
+      background-color: #0f172a;
+      color: #ffffff;
+    }
+    .btn-selected {
+      background-color: #9333ea !important;
+      color: white !important;
+    }
+    .check-icon::before {
+      content: '✔';
+      margin-right: 0.5rem;
+      color: #4ade80;
+    }
+    .fade-in {
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body class="min-h-screen p-6">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <h1 class="text-3xl font-bold text-fuchsia-400 text-center mb-6">RoArm-M1 Pipeline</h1>
+
+    <!-- Input Mode Selection -->
+    <div id="input-mode" class="mb-6">
+      <h2 class="text-xl mb-2">Select Input Mode:</h2>
+      <div class="flex gap-4">
+        <button class="px-4 py-2 bg-fuchsia-700 rounded hover:bg-fuchsia-800" onclick="selectInputMode('voice', this)">🎙️ Voice</button>
+        <button class="px-4 py-2 bg-fuchsia-700 rounded hover:bg-fuchsia-800" onclick="selectInputMode('screen', this)">🖥️ Screen</button>
+      </div>
+    </div>
+
+    <!-- Object Selection -->
+    <div id="object-selection" class="mb-6 hidden">
+      <h2 class="text-xl mb-2">Choose Target Object:</h2>
+      <div class="grid grid-cols-2 gap-4">
+        <button class="px-4 py-2 bg-purple-600 rounded hover:bg-purple-700" onclick="selectObject('Cup', this)">🥤 Cup</button>
+        <button class="px-4 py-2 bg-purple-600 rounded hover:bg-purple-700" onclick="selectObject('Scissors', this)">✂️ Scissors</button>
+        <button class="px-4 py-2 bg-purple-600 rounded hover:bg-purple-700" onclick="selectObject('Bottle', this)">🍼 Bottle</button>
+        <button class="px-4 py-2 bg-purple-600 rounded hover:bg-purple-700" onclick="selectObject('Fork', this)">🍴 Fork</button>
+      </div>
+    </div>
+
+    <!-- Step Tracker -->
+    <div id="pipeline-steps" class="hidden">
+      <h2 class="text-xl mb-2">Pipeline Progress:</h2>
+      <ul class="mb-4 space-y-1" id="step-list">
+        <!-- JS Populated Steps -->
+      </ul>
+
+      <!-- Current Step Highlight -->
+      <div id="current-step-box" class="p-4 bg-slate-800 rounded-lg shadow-lg mb-4 fade-in">
+        <h3 class="text-2xl font-bold mb-2 text-fuchsia-300" id="current-step-name">Step name here</h3>
+        <div class="text-sm text-purple-200" id="current-step-desc">Step description here</div>
+      </div>
+
+      <!-- Next Step Button -->
+      <button class="px-4 py-2 bg-green-600 rounded hover:bg-green-700" onclick="nextStep()">✔ Done</button>
+    </div>
+  </div>
+
+  <script>
+    let inputMode = null;
+    let selectedObject = null;
+    let currentStep = 0;
+
+    const steps = [
+      { name: "Start System", desc: "Initialize camera, sensor, arm. Load YOLOv8 + MiDaS." },
+      { name: "User Chooses Object", desc: "User selects one of the available target objects." },
+      { name: "Connect Devices", desc: "Connect to camera, sensor, arm, and ROS2 control." },
+      { name: "Scan & Detect Object", desc: "Arm scans and uses YOLO for detection." },
+      { name: "Estimate Depth", desc: "Run MiDaS and extract depth of bounding box." },
+      { name: "Transform Coordinates", desc: "Transform coordinates from camera to base frame." },
+      { name: "Inverse Kinematics", desc: "Calculate joint angles for reaching object." },
+      { name: "Move & Grasp", desc: "Move to object and close gripper." },
+      { name: "Return to Start", desc: "Go back to home position and release object." },
+      { name: "Prompt User", desc: "Ask if user wants to pick another object." }
+    ];
+
+    function selectInputMode(mode, btn) {
+      inputMode = mode;
+      document.querySelectorAll('#input-mode button').forEach(b => b.classList.remove('btn-selected'));
+      btn.classList.add('btn-selected');
+      document.getElementById('object-selection').classList.remove('hidden');
+    }
+
+    function selectObject(obj, btn) {
+      selectedObject = obj;
+      document.querySelectorAll('#object-selection button').forEach(b => b.classList.remove('btn-selected'));
+      btn.classList.add('btn-selected');
+      document.getElementById('pipeline-steps').classList.remove('hidden');
+      populateSteps();
+      showStep(0);
+    }
+
+    function populateSteps() {
+      const ul = document.getElementById('step-list');
+      ul.innerHTML = '';
+      steps.forEach((step, i) => {
+        const li = document.createElement('li');
+        li.id = `step-${i}`;
+        li.textContent = step.name;
+        li.className = 'ml-2';
+        ul.appendChild(li);
+      });
+    }
+
+    function showStep(i) {
+      const stepName = document.getElementById('current-step-name');
+      const stepDesc = document.getElementById('current-step-desc');
+
+      stepName.textContent = steps[i].name;
+      stepDesc.textContent = steps[i].desc;
+
+      for (let j = 0; j < steps.length; j++) {
+        const el = document.getElementById(`step-${j}`);
+        el.className = j < i ? 'check-icon text-green-400 ml-2' : 'ml-2';
+      }
+    }
+
+    function nextStep() {
+      if (currentStep < steps.length - 1) {
+        currentStep++;
+        showStep(currentStep);
+      } else {
+        alert('✅ Process complete!');
+      }
+    }
+  </script>
+</body>
+</html>
