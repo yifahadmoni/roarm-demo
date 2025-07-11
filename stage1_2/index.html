@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stage 1 Process</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RoArm-M1 Interaction</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
   <style>
@@ -19,7 +19,6 @@
       padding: 1rem;
     }
     .log-entry {
-      font-family: 'Fira Code', monospace;
       padding: 0.25rem 0.5rem;
       border-radius: 0.25rem;
       background-color: #0f172a;
@@ -28,38 +27,68 @@
     .info-log { color: #60a5fa; }
     .fail-log { color: #f87171; }
     .success-log { color: #4ade80; }
-    .title {
-      color: #f472b6;
+    .user-log { color: #fbbf24; }
+    .btn {
+      @apply bg-fuchsia-700 text-white px-4 py-2 rounded-lg hover:bg-fuchsia-600 transition;
+    }
+    .btn-secondary {
+      @apply bg-slate-700 text-white px-4 py-2 rounded-lg hover:bg-slate-600 transition;
     }
   </style>
 </head>
 <body class="p-6">
   <div class="max-w-4xl mx-auto">
     <header class="mb-8 text-center">
-      <h1 class="text-3xl font-bold title">🦾 RoArm-M1 – Simple Stage 1 Flow</h1>
-      <p class="text-lg text-fuchsia-300">A minimal version of the full process</p>
+      <h1 class="text-3xl font-bold text-fuchsia-400 mb-2">🦾 RoArm-M1: Object Picker</h1>
+      <p class="text-lg text-fuchsia-300">Choose input mode and target object</p>
     </header>
 
-    <div class="step-box mb-6">
-      <h2 class="text-xl font-semibold mb-2 text-fuchsia-400">Step 1: System Init</h2>
-      <div class="terminal">
-        <div class="log-entry info-log">[INFO] Camera initialized</div>
-        <div class="log-entry info-log">[INFO] YOLO model loaded</div>
-        <div class="log-entry fail-log">[FAIL] Distance sensor not responding</div>
+    <!-- Input Mode -->
+    <div class="mb-6">
+      <h2 class="text-xl font-semibold mb-2 text-pink-400">Step 1: Choose Input Mode</h2>
+      <div class="flex gap-4 flex-wrap">
+        <button class="btn" onclick="logMode('Voice')">🎤 Voice</button>
+        <button class="btn" onclick="logMode('Screen')">🖥️ Screen</button>
       </div>
     </div>
 
-    <div class="step-box mb-6">
-      <h2 class="text-xl font-semibold mb-2 text-fuchsia-400">Step 2: Object Selection</h2>
-      <div class="terminal">
-        <div class="log-entry info-log">[INFO] Objects available: Cup, Bottle, Scissors</div>
-        <div class="log-entry success-log">[USER] Selected: Bottle</div>
+    <!-- Object Selection -->
+    <div class="mb-6">
+      <h2 class="text-xl font-semibold mb-2 text-pink-400">Step 2: Select an Object</h2>
+      <div class="flex gap-4 flex-wrap">
+        <button class="btn-secondary" onclick="logObject('Cup')">🥤 Cup</button>
+        <button class="btn-secondary" onclick="logObject('Bottle')">🧴 Bottle</button>
+        <button class="btn-secondary" onclick="logObject('Scissors')">✂️ Scissors</button>
+        <button class="btn-secondary" onclick="logObject('Box')">📦 Box</button>
       </div>
+    </div>
+
+    <!-- Logs -->
+    <div class="mt-8 terminal">
+      <p class="text-sm text-gray-400 mb-2">📝 Logs:</p>
+      <div id="logArea" class="space-y-1 text-sm"></div>
     </div>
 
     <footer class="mt-12 text-center text-sm text-gray-400">
-      <p>v1.0 – Stage 1.2 styled view</p>
+      <p>v1.0 – Voice/Screen interface for object selection</p>
     </footer>
   </div>
+
+  <script>
+    function logMode(mode) {
+      const log = `[USER] Selected input mode: ${mode}`;
+      addLog(log, 'user-log');
+    }
+    function logObject(obj) {
+      const log = `[USER] Selected object: ${obj}`;
+      addLog(log, 'user-log');
+    }
+    function addLog(text, className) {
+      const div = document.createElement('div');
+      div.className = `log-entry ${className}`;
+      div.textContent = text;
+      document.getElementById('logArea').appendChild(div);
+    }
+  </script>
 </body>
 </html>
