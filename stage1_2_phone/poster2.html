@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RoArm-M1 Process Flow (Printable)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap">
+  <style>
+    body {
+      font-family: 'Fira Code', monospace;
+      background-color: #ffffff;
+      color: #1e1e1e;
+    }
+
+    @media print {
+      @page {
+        size: A1 landscape;
+        margin: 1cm;
+      }
+
+      body {
+        background-color: #ffffff !important;
+        color: #1e1e1e !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+
+      .step-box {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+    }
+
+    .step-box {
+      border-radius: 0.75rem;
+      border: 2px solid #9333ea;
+      background-color: #f3e8ff;
+      padding: 1rem;
+    }
+
+    .step-number {
+      background-color: #9333ea;
+      color: white;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      border: 2px solid #c4b5fd;
+    }
+
+    .terminal {
+      background-color: #f9fafb;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+    }
+
+    .log-entry {
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      margin-bottom: 0.25rem;
+      background-color: #f3f4f6;
+    }
+
+    .info-log { color: #2563eb; }
+    .debug-log { color: #4f46e5; }
+    .user-log { color: #ca8a04; }
+    .fail-log { color: #dc2626; }
+    .success-log { color: #16a34a; }
+
+    .arrow {
+      color: #9333ea;
+      font-size: 1.5rem;
+      text-align: center;
+      margin: 1rem 0;
+      font-weight: bold;
+    }
+
+    .highlight {
+      color: #7c3aed;
+      font-weight: 600;
+    }
+
+    .math {
+      font-style: italic;
+      color: #6b7280;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+  <div class="max-w-6xl mx-auto">
+    <header class="mb-8 text-center">
+      <h1 class="text-3xl md:text-4xl font-bold mb-2 text-purple-700">🦾 Robotic Arm RoArm-M1: Full Process Flow</h1>
+      <p class="text-xl text-purple-600">🎯 Task: Detect, Reach, and Pick a Target Object</p>
+    </header>
+
+<!-- Step 1 -->
+<div class="step-box p-4">
+  <div class="flex items-center mb-3">
+    <div class="step-number mr-3">1</div>
+    <h2 class="text-xl font-semibold">Start System</h2>
+  </div>
+  <ul class="list-disc list-inside mb-3 ml-4">
+    <li>Initialize camera, sensor, arm</li>
+    <li>Load YOLOv8 + MiDaS</li>
+  </ul>
+  <div class="terminal">
+    <p class="text-sm text-gray-500 mb-1">📝 Logs:</p>
+    <div class="grid grid-cols-2 gap-2">
+      <div>
+        <p class="text-xs text-green-700 mb-1">Success Case:</p>
+        <div class="log-entry info-log">[INFO] System initialized</div>
+        <div class="log-entry info-log">[INFO] Models loaded successfully</div>
+      </div>
+      <div>
+        <p class="text-xs text-red-600 mb-1">Failure Case:</p>
+        <div class="log-entry fail-log">[ERROR] Failed to initialize system</div>
+        <div class="log-entry fail-log">[FAIL] Model loading error: CUDA out of memory</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="arrow">↓</div>
+
+<!-- Step 2 -->
+<div class="step-box p-4">
+  <div class="flex items-center mb-3">
+    <div class="step-number mr-3">2</div>
+    <h2 class="text-xl font-semibold">User Chooses Object</h2>
+  </div>
+  <ul class="list-disc list-inside mb-3 ml-4">
+    <li>Show list of classes: 0: Cup, 1: Scissors, 2: Bottle</li>
+    <li>User selects: "<span class="highlight">Cup</span>"</li>
+  </ul>
+  <div class="terminal">
+    <p class="text-sm text-gray-500 mb-1">📝 Logs:</p>
+    <div class="grid grid-cols-2 gap-2">
+      <div>
+        <p class="text-xs text-green-700 mb-1">Success Case:</p>
+        <div class="log-entry user-log">[USER] Selected target object: Cup</div>
+        <div class="log-entry info-log">[INFO] Target set: Cup (class_id: 0)</div>
+      </div>
+      <div>
+        <p class="text-xs text-red-600 mb-1">Failure Case:</p>
+        <div class="log-entry fail-log">[ERROR] No selection made</div>
+        <div class="log-entry fail-log">[FAIL] Class number not found in list, try again</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="arrow">↓</div>
+
+<!-- Step 3 -->
+<div class="step-box p-4">
+  <div class="flex items-center mb-3">
+    <div class="step-number mr-3">3</div>
+    <h2 class="text-xl font-semibold">Connect Devices</h2>
+  </div>
+  <ul class="list-disc list-inside mb-3 ml-4">
+    <li>Connect to:
+      <ul class="list-disc list-inside ml-6">
+        <li>📷 Camera</li>
+        <li>📡 Distance sensor (UDP)</li>
+        <li>🤖 Arm via ROS 2</li>
+        <li>🔌 Serial control</li>
+      </ul>
+    </li>
+  </ul>
+  <div class="terminal">
+    <p class="text-sm text-gray-500 mb-1">📝 Logs:</p>
+    <div class="grid grid-cols-2 gap-2">
+      <div>
+        <p class="text-xs text-green-700 mb-1">Success Case:</p>
+        <div class="log-entry debug-log">[DEBUG] Connecting to camera... SUCCESS</div>
+        <div class="log-entry debug-log">[DEBUG] Connecting to sensor... SUCCESS</div>
+        <div class="log-entry debug-log">[DEBUG] Connecting to ROS 2... SUCCESS</div>
+        <div class="log-entry debug-log">[DEBUG] Serial control established</div>
+      </div>
+      <div>
+        <p class="text-xs text-red-600 mb-1">Failure Case:</p>
+        <div class="log-entry debug-log">[DEBUG] Connecting to camera... SUCCESS</div>
+        <div class="log-entry fail-log">[ERROR] Sensor connection failed</div>
+        <div class="log-entry fail-log">[FAIL] UDP port 5678 not responding</div>
+        <div class="log-entry fail-log">[ERROR] Cannot connect to robot board</div>
+        <div class="log-entry fail-log">[FAIL] Serial control connection lost</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="arrow">↓</div>
+
+<!-- Step 4 -->
+<div class="step-box p-4">
+  <div class="flex items-center mb-3">
+    <div class="step-number mr-3">4</div>
+    <h2 class="text-xl font-semibold">Scan & Detect Object</h2>
+  </div>
+  <ul class="list-disc list-inside mb-3 ml-4">
+    <li>Arm scans in up to 5 steps</li>
+    <li>At each step:
+      <ul class="list-disc list-inside ml-6">
+        <li>Capture image</li>
+        <li>Run YOLO detection</li>
+      </ul>
+    </li>
+  </ul>
+  <div class="terminal">
+    <p class="text-sm text-gray-500 mb-1">📝 Logs:</p>
+    <div class="grid grid-cols-2 gap-2">
+      <div>
+        <p class="text-xs text-green-700 mb-1">Success Case:</p>
+        <div class="log-entry info-log">[INFO] Cup detected at (x1=230, y1=114, x2=275, y2=157)</div>
+      </div>
+      <div>
+        <p class="text-xs text-red-600 mb-1">Failure Case:</p>
+        <div class="log-entry fail-log">[INFO] Object not found after 5 steps.</div>
+        <div class="log-entry fail-log">[FAIL] Returning to object selection.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="arrow">↓</div>
+
+<!-- Step 5 -->
+<div class="step-box p-4">
+  <div class="flex items-center mb-3">
+    <div class="step-number mr-3">5</div>
+    <h2 class="text-xl font-semibold">Estimate Depth</h2>
+  </div>
+  <ul class="list-disc list-inside mb-3 ml-4">
+    <li>Run MiDaS on frame</li>
+    <li>Extract bbox center depth</li>
+  </ul>
+  <div class="terminal">
+    <p class="text-sm text-gray-500 mb-1">📝 Logs:</p>
+    <div class="grid grid-cols-2 gap-2">
+      <div>
+        <p class="text-xs text-green-700 mb-1">Success Case:</p>
+        <div class="log-entry info-log">[INFO] Depth: 0.52 m</div>
+        <div class="log-entry info-log">[INFO] 3D position: x=0.12, y=−0.03, z=0.52</div>
+      </div>
+      <div>
+        <p class="text-xs text-red-600 mb-1">Failure Case:</p>
+        <div class="log-entry fail-log">[ERROR] Depth estimation failed</div>
+        <div class="log-entry fail-log">[FAIL] Unexpected input to MiDaS model</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="arrow">↓</div>
+
+<!-- Step 6 -->
+<div class="step-box p-4">
+  <div class="flex items-center mb-3">
+    <div class="step-number mr-3">6</div>
+    <h2 class="text-xl font-semibold">Coordinate Transformation</h2>
+  </div>
+  <ul class="list-disc list-inside mb-3 ml-4">
+    <li>Transform from camera_link → base_link</li>
+  </ul>
+  <div class="terminal">
+    <p class="text-sm text-gray-500 mb-1">📝 Logs:</p>
+    <div class="grid grid-cols-2 gap-2">
+      <div>
+        <p class="text-xs text-green-700 mb-1">Success Case:</p>
+        <div class="log-entry info-log">[INFO] Transformed to base frame: x=0.23, y=0.11, z=0.05</div>
+      </div>
+      <div>
+        <p class="text-xs text-red-600 mb-1">Failure Case:</p>
+        <div class="log-entry fail-log">[ERROR] Transform matrix singular</div>
+        <div class="log-entry fail-log">[FAIL] Cannot compute inverse transform</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="arrow">↓</div>
+<!-- Step 7 -->
+<div class="step-box p-4">
+  <div class="flex items-center mb-3">
+    <div class="step-number mr-3">7</div>
+    <h2 class="text-xl font-semibold">Inverse Kinematics (IK)</h2>
+  </div>
+  <ul class="list-disc list-inside mb-3 ml-4">
+    <li><span class="math">θ₁ = arctan2(y, x)</span></li>
+    <li><span class="math">R = sqrt(x² + y²), Z = z − z_base, D = sqrt(R² + Z²)</span></li>
+    <li><span class="math">θ₂ = α + β</span> (from triangle)</li>
+    <li><span class="math">θ₃ = π − arccos(...)</span></li>
+  </ul>
+  <div class="terminal">
+    <p class="text-sm text-gray-500 mb-1">📝 Logs:</p>
+    <div class="grid grid-cols-2 gap-2">
+      <div>
+        <p class="text-xs text-green-700 mb-1">Success Case:</p>
+        <div class="log-entry info-log">[INFO] θ₁=0.44, θ₂=1.02, θ₃=1.13</div>
+      </div>
+      <div>
+        <p class="text-xs text-red-600 mb-1">Failure Case:</p>
+        <div class="log-entry info-log">[INFO] IK calculation failed</div>
+        <div class="log-entry fail-log">[FAIL] Target position unreachable</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="arrow">↓</div>
+
+<!-- Step 8 -->
+<div class="step-box p-4">
+  <div class="flex items-center mb-3">
+    <div class="step-number mr-3">8</div>
+    <h2 class="text-xl font-semibold">Move & Grasp</h2>
+  </div>
+  <ul class="list-disc list-inside mb-3 ml-4">
+    <li>Move to target</li>
+    <li>Open → Close gripper</li>
+  </ul>
+  <div class="terminal">
+    <p class="text-sm text-gray-500 mb-1">📝 Logs:</p>
+    <div class="grid grid-cols-2 gap-2">
+      <div>
+        <p class="text-xs text-green-700 mb-1">Success Case:</p>
+        <div class="log-entry info-log">[INFO] Arm moving...</div>
+        <div class="log-entry info-log">[INFO] Gripper opened</div>
+        <div class="log-entry info-log">[INFO] Object grasped</div>
+      </div>
+      <div>
+        <p class="text-xs text-red-600 mb-1">Failure Case:</p>
+        <div class="log-entry info-log">[INFO] Arm moving...</div>
+        <div class="log-entry fail-log">[ERROR] Cannot connect to robot board</div>
+        <div class="log-entry fail-log">[FAIL] Serial control connection lost</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="arrow">↓</div>
+
+<!-- Step 9 -->
+<div class="step-box p-4">
+  <div class="flex items-center mb-3">
+    <div class="step-number mr-3">9</div>
+    <h2 class="text-xl font-semibold">Return to Start</h2>
+  </div>
+  <ul class="list-disc list-inside mb-3 ml-4">
+    <li>Move to home</li>
+    <li>Release object</li>
+  </ul>
+  <div class="terminal">
+    <p class="text-sm text-gray-500 mb-1">📝 Logs:</p>
+    <div class="grid grid-cols-2 gap-2">
+      <div>
+        <p class="text-xs text-green-700 mb-1">Success Case:</p>
+        <div class="log-entry info-log">[INFO] Returning to home</div>
+        <div class="log-entry success-log">[SUCCESS] Task completed</div>
+      </div>
+      <div>
+        <p class="text-xs text-red-600 mb-1">Failure Case:</p>
+        <div class="log-entry info-log">[INFO] Attempting to return home</div>
+        <div class="log-entry fail-log">[ERROR] Cannot reach home position</div>
+        <div class="log-entry fail-log">[FAIL] Task incomplete</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="arrow">↓</div>
+
+<!-- Step 10 -->
+<div class="step-box p-4">
+  <div class="flex items-center mb-3">
+    <div class="step-number mr-3">10</div>
+    <h2 class="text-xl font-semibold">Prompt User</h2>
+  </div>
+  <ul class="list-disc list-inside mb-3 ml-4">
+    <li>Ask: Pick another object?
+      <ul class="list-disc list-inside ml-6">
+        <li>→ Yes → Step 2</li>
+        <li>→ No → Shutdown</li>
+      </ul>
+    </li>
+  </ul>
+  <div class="terminal">
+    <p class="text-sm text-gray-500 mb-1">📝 Logs:</p>
+    <div class="grid grid-cols-2 gap-2">
+      <div>
+        <p class="text-xs text-green-700 mb-1">Success Case:</p>
+        <div class="log-entry user-log">[USER] Session ended.</div>
+        <div class="log-entry info-log">[INFO] Shutting down system.</div>
+      </div>
+      <div>
+        <p class="text-xs text-red-600 mb-1">Failure Case:</p>
+        <div class="log-entry user-log">[USER] Session ended.</div>
+        <div class="log-entry fail-log">[ERROR] System unresponsive</div>
+        <div class="log-entry fail-log">[FAIL] Force shutdown required</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  </div>
+</body>
+</html>
+

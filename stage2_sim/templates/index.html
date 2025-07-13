@@ -1,0 +1,9 @@
+<button onclick="startProcess()">התחל תהליך</button>
+<div id="log"></div>
+<script>
+  async function startProcess() {
+    const response = await fetch("http://localhost:5000/start");
+    const result = await response.json();
+    document.getElementById("log").innerText = result.log;
+  }
+</script>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>RoArm-M1 Simulation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #0f172a;
+      color: white;
+      font-family: 'Fira Code', monospace;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-start p-6 space-y-6">
+
+  <h1 class="text-3xl font-bold text-fuchsia-400">הפעלת סימולציית RoArm-M1</h1>
+
+  <button id="start-btn" class="bg-fuchsia-600 hover:bg-fuchsia-700 px-6 py-2 rounded-xl text-white text-lg shadow">
+    ▶️ התחילי סימולציה
+  </button>
+
+  <div id="log-container" class="w-full max-w-2xl bg-slate-800 rounded-xl p-4 mt-4 space-y-2 shadow-inner">
+    <h2 class="text-xl text-fuchsia-300 mb-2">📋 לוג הסימולציה:</h2>
+    <ul id="log-list" class="list-disc list-inside text-sm text-fuchsia-100"></ul>
+  </div>
+
+  <script>
+    document.getElementById("start-btn").addEventListener("click", async () => {
+      const logList = document.getElementById("log-list");
+      logList.innerHTML = ""; // Clear previous logs
+
+      try {
+        const res = await fetch("/start");
+        const data = await res.json();
+        data.full_log.forEach(entry => {
+          const li = document.createElement("li");
+          li.textContent = `🔹 שלב ${entry.step}: ${entry.log}`;
+          logList.appendChild(li);
+        });
+      } catch (err) {
+        const li = document.createElement("li");
+        li.textContent = "❌ שגיאה בהרצת הסימולציה";
+        logList.appendChild(li);
+      }
+    });
+  </script>
+</body>
+</html>
